@@ -1,0 +1,52 @@
+{
+  "1": {
+    "title": "Comprehensive Dataset Analysis and Preprocessing",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Copy_of_Understanding_Any_Dataset_Like_a_Data_Scientist.ipynb",
+    "filename": "Copy_of_Understanding_Any_Dataset_Like_a_Data_Scientist.ipynb"
+  },
+  "2": {
+    "title": "TensorFlow 2 Tensor Operations for GenAI",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Experiment%20No2.pdf",
+    "filename": "Experiment_No2_TensorFlow.ipynb"
+  },
+  "3": {
+    "title": "FLAN-T5 Question-Answering System",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Text_Generation_AI_Question_Answer_System_FLAN_T5.ipynb",
+    "filename": "Text_Generation_AI_Question_Answer_System_FLAN_T5.ipynb"
+  },
+  "4": {
+    "title": "Text-to-Image Generation with Diffusion",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Exe_4_ImageGeneration.ipynb",
+    "filename": "Exe_4_ImageGeneration.ipynb"
+  },
+  "5": {
+    "title": "Variational Autoencoder (VAE) on MNIST",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/VAE_MNIST_Generation.ipynb",
+    "filename": "VAE_MNIST_Generation.ipynb"
+  },
+  "6": {
+    "title": "DCGAN Face Generation on CelebA",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/GAN_Face_Generation_CelebA.ipynb",
+    "filename": "GAN_Face_Generation_CelebA.ipynb"
+  },
+  "7": {
+    "title": "StyleGAN Face Generation & Latent Mixing",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/StyleGAN_Face_Generation2.ipynb",
+    "filename": "StyleGAN_Face_Generation2.ipynb"
+  },
+  "8": {
+    "title": "Novel Music Generation with MusicGen",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Simple_MusicGen_Generation.ipynb",
+    "filename": "Simple_MusicGen_Generation.ipynb"
+  },
+  "9": {
+    "title": "Personalized Assistant with RAG & LoRA Fine-Tuning",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Experiment%20No9.pdf",
+    "filename": "RAG_Assistant_LoRA.ipynb"
+  },
+  "10": {
+    "title": "Text-to-Video Generation with Foundation Diffusion Model",
+    "notebook_url": "https://colab.research.google.com/github/PriestKingOG/GenAi/blob/master/Experiment%20No10.pdf",
+    "filename": "Text_to_Video_Generation.ipynb"
+  }
+}

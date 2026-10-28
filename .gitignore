@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+.pytest_cache/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Environment Variables & Secrets
+.env
+.env.local
+
+# Large Model weights
+models/*.pt
+models/*.bin
+models/*.safetensors
+models/*.h5
+!models/.gitkeep
+
+# Generated outputs
+outputs/*
+!outputs/.gitkeep
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
