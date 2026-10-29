@@ -28,6 +28,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def rewrite_vercel_path_middleware(request: Request, call_next):
+    match_param = request.query_params.get("match")
+    if match_param:
+        matched_clean = match_param.lstrip("/")
+        new_path = f"/api/{matched_clean}" if matched_clean else "/api"
+        request.scope["path"] = new_path
+        request.scope["raw_path"] = new_path.encode("utf-8")
+    return await call_next(request)
+
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exc: Exception):
     return JSONResponse(
