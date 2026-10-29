@@ -49,7 +49,6 @@ if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 @app.get("/api")
-@app.get("/api/index.py")
 def api_root():
     return {"status": "ok", "message": "GenAI Studio API is operational"}
 
