@@ -28,6 +28,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": "Not Found",
+            "url_path": request.url.path,
+            "scope_path": request.scope.get("path"),
+            "query_params": dict(request.query_params)
+        }
+    )
+
+
 # Include Experiment Routers
 app.include_router(exp01.router)
 app.include_router(exp02.router)
