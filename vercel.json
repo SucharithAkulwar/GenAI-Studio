@@ -3,14 +3,22 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__path=/api/$1"
     },
     {
       "source": "/outputs/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__path=/outputs/$1"
     },
     {
-      "source": "/",
+      "source": "/docs",
+      "destination": "/api/index.py?__path=/docs"
+    },
+    {
+      "source": "/openapi.json",
+      "destination": "/api/index.py?__path=/openapi.json"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/static/index.html"
     }
   ]

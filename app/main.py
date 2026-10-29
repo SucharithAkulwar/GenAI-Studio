@@ -50,13 +50,8 @@ if STATIC_DIR.exists():
 
 @app.get("/api")
 @app.get("/api/index.py")
-def api_root(request: Request):
-    return {
-        "status": "ok",
-        "path": request.url.path,
-        "scope_path": request.scope.get("path"),
-        "headers": {k: v for k, v in request.headers.items() if not k.startswith("authorization")}
-    }
+def api_root():
+    return {"status": "ok", "message": "GenAI Studio API is operational"}
 
 @app.get("/api/system/status")
 @app.get("/system/status")

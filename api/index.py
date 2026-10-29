@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from urllib.parse import parse_qs, urlencode
 
 # Add project root to sys.path so app module is importable
 root_dir = Path(__file__).resolve().parent.parent
@@ -10,17 +11,14 @@ from app.main import app as fastapi_app
 
 async def app(scope, receive, send):
     if scope.get("type") == "http":
-        headers = dict(scope.get("headers", []))
-        matched = headers.get(b"x-matched-path", b"").decode("utf-8")
-        if not matched:
-            matched = headers.get(b"x-forwarded-uri", b"").decode("utf-8")
-        if not matched:
-            matched = headers.get(b"x-real-path", b"").decode("utf-8")
-
-        current_path = scope.get("path", "")
-        if matched:
-            clean_path = matched.split("?")[0]
-            if clean_path and clean_path not in ("/api/index.py", "/api/index", "/api"):
-                scope["path"] = clean_path
+        qs_bytes = scope.get("query_string", b"")
+        qs_str = qs_bytes.decode("utf-8", errors="ignore")
+        if "__path=" in qs_str:
+            params = parse_qs(qs_str, keep_blank_values=True)
+            custom_path = params.pop("__path", [None])[0]
+            if custom_path:
+                scope["path"] = custom_path if custom_path.startswith("/") else f"/{custom_path}"
+                remaining_qs = urlencode([(k, v) for k, vs in params.items() for v in vs])
+                scope["query_string"] = remaining_qs.encode("utf-8")
 
     await fastapi_app(scope, receive, send)
