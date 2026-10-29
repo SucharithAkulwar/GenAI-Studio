@@ -428,14 +428,6 @@ body.theme-dark .hero-display-title .accent-line {
   color: #3b82f6;
 }
 
-.hero-sparkle {
-  position: absolute;
-  top: 52%;
-  right: -32px;
-  transform: translateY(-50%);
-  color: #8b5cf6;
-}
-
 .hero-lead-text {
   font-size: 16.5px;
   line-height: 1.6;
@@ -1078,8 +1070,5 @@ input[type=checkbox] {
   }
   .content-container {
     padding: 20px 16px;
-  }
-  .hero-sparkle {
-    display: none;
   }
 }
