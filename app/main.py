@@ -48,11 +48,18 @@ STATIC_DIR = BASE_DIR / "static"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+@app.get("/api")
+@app.get("/api/index.py")
+def api_root():
+    return {"status": "ok", "message": "GenAI Studio API is operational"}
+
 @app.get("/api/system/status")
+@app.get("/system/status")
 def system_status():
     return ModelManager.get_system_status()
 
 @app.get("/api/experiments")
+@app.get("/experiments")
 def list_experiments():
     return [
         {"id": 1, "title": exp01.EXP_INFO["title"], "category": "Data Foundations", "tags": exp01.EXP_INFO["tags"]},

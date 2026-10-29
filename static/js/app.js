@@ -9,10 +9,23 @@
   const $ = (selector, context = document) => context.querySelector(selector);
   const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
 
+  const DEFAULT_EXPERIMENTS = [
+    { id: 1, title: 'Data Foundations & Feature Prep', category: 'Data Foundations', tags: ['Pandas', 'EDA', 'Feature Eng'] },
+    { id: 2, title: 'Tensor Computing & Operations', category: 'Tensor Computing', tags: ['PyTorch', 'Linear Algebra', 'Shapes'] },
+    { id: 3, title: 'Transformers & Sentiment NLP', category: 'Transformers & NLP', tags: ['HuggingFace', 'Attention', 'BERT'] },
+    { id: 4, title: 'Generative Diffusion Pipeline', category: 'Generative Diffusion', tags: ['Stable Diffusion', 'Latents', 'Noise'] },
+    { id: 5, title: 'Variational Autoencoders & Latent Space', category: 'Latent Space & VAE', tags: ['VAE', 'Manifold', 'MNIST'] },
+    { id: 6, title: 'Deep Convolutional GAN (DCGAN)', category: 'Adversarial Networks', tags: ['GAN', 'Generator', 'Discriminator'] },
+    { id: 7, title: 'Style-Based Synthesis (StyleGAN Concepts)', category: 'Style-Based Synthesis', tags: ['StyleGAN', 'AdaIN', 'Style Mixing'] },
+    { id: 8, title: 'Audio & Music Synthesis', category: 'Audio & MusicGen', tags: ['Audio', 'Spectrogram', 'Waveform'] },
+    { id: 9, title: 'Retrieval Augmented Generation (RAG)', category: 'RAG & LLM Fine-Tuning', tags: ['Embeddings', 'Vector DB', 'Retrieval'] },
+    { id: 10, title: 'Video Diffusion & Temporal Modeling', category: 'Video Diffusion', tags: ['VideoGen', 'Motion', 'Temporal'] }
+  ];
+
   const state = {
     currentRoute: 'home',
     systemStatus: null,
-    experiments: [],
+    experiments: DEFAULT_EXPERIMENTS,
     expCache: {},
     activeTab: 'gen'
   };
@@ -89,54 +102,60 @@
   }
 
   async function initNavigation() {
+    const navList = $('#experiments-nav-list');
+    const mobileList = $('#mobile-nav-list');
+
+    const renderItems = (items) => (Array.isArray(items) ? items : DEFAULT_EXPERIMENTS).map(exp => `
+      <a href="#exp-${exp.id}" class="dropdown-item" data-id="exp-${exp.id}" id="nav-exp-${exp.id}">
+        <span class="dropdown-num">${String(exp.id).padStart(2, '0')}</span>
+        <span class="nav-label">${escapeHtml(exp.title)}</span>
+      </a>
+    `).join('');
+
+    // Pre-populate navigation dropdown immediately
+    if (navList) navList.innerHTML = renderItems(state.experiments);
+    if (mobileList) mobileList.innerHTML = renderItems(state.experiments);
+
     try {
       const res = await fetch('/api/experiments');
-      const list = await res.json();
-      state.experiments = list;
-
-      const navList = $('#experiments-nav-list');
-      const mobileList = $('#mobile-nav-list');
-
-      const renderItems = (items) => items.map(exp => `
-        <a href="#exp-${exp.id}" class="dropdown-item" data-id="exp-${exp.id}" id="nav-exp-${exp.id}">
-          <span class="dropdown-num">${String(exp.id).padStart(2, '0')}</span>
-          <span class="nav-label">${escapeHtml(exp.title)}</span>
-        </a>
-      `).join('');
-
-      if (navList) navList.innerHTML = renderItems(list);
-      if (mobileList) mobileList.innerHTML = renderItems(list);
-
-      // Search filter in dropdown
-      const searchInput = $('#exp-search');
-      if (searchInput && navList) {
-        searchInput.addEventListener('input', (e) => {
-          const q = e.target.value.toLowerCase().trim();
-          $$('.dropdown-item', navList).forEach(item => {
-            const text = item.textContent.toLowerCase();
-            item.style.display = text.includes(q) ? 'flex' : 'none';
-          });
-        });
+      if (res.ok) {
+        const list = await res.json();
+        if (Array.isArray(list) && list.length > 0) {
+          state.experiments = list;
+          if (navList) navList.innerHTML = renderItems(list);
+          if (mobileList) mobileList.innerHTML = renderItems(list);
+        }
       }
-
-      // Dropdown toggle
-      const dropdownContainer = $('#exp-dropdown-container');
-      const dropdownBtn = $('#exp-dropdown-btn');
-      if (dropdownBtn && dropdownContainer) {
-        dropdownBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          dropdownContainer.classList.toggle('open');
-        });
-
-        document.addEventListener('click', (e) => {
-          if (!dropdownContainer.contains(e.target)) {
-            dropdownContainer.classList.remove('open');
-          }
-        });
-      }
-
     } catch (e) {
-      console.error('Failed to load navigation:', e);
+      console.warn('Navigation using fallback experiments list:', e);
+    }
+
+    // Search filter in dropdown
+    const searchInput = $('#exp-search');
+    if (searchInput && navList) {
+      searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        $$('.dropdown-item', navList).forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(q) ? 'flex' : 'none';
+        });
+      });
+    }
+
+    // Dropdown toggle
+    const dropdownContainer = $('#exp-dropdown-container');
+    const dropdownBtn = $('#exp-dropdown-btn');
+    if (dropdownBtn && dropdownContainer) {
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownContainer.classList.toggle('open');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!dropdownContainer.contains(e.target)) {
+          dropdownContainer.classList.remove('open');
+        }
+      });
     }
   }
 
@@ -219,7 +238,7 @@
       <div id="experiments-section" class="section-divider-title">Select an experiment to launch</div>
 
       <div class="exp-grid">
-        ${state.experiments.map(exp => `
+        ${(Array.isArray(state.experiments) && state.experiments.length ? state.experiments : DEFAULT_EXPERIMENTS).map(exp => `
           <a href="#exp-${exp.id}" class="exp-card">
             <div class="exp-card-num">EXPERIMENT ${String(exp.id).padStart(2, '0')}</div>
             <div class="exp-card-title">${escapeHtml(exp.title)}</div>
@@ -1493,10 +1512,9 @@
   window.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initMobileMenu();
-    initNavigation().then(() => {
-      handleRoute();
-      window.addEventListener('hashchange', handleRoute);
-    });
+    initNavigation();
+    handleRoute();
+    window.addEventListener('hashchange', handleRoute);
     fetchSystemStatus();
     setInterval(fetchSystemStatus, 8000);
   });
