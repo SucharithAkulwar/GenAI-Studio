@@ -28,15 +28,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.middleware("http")
-async def rewrite_vercel_path_middleware(request: Request, call_next):
-    match_param = request.query_params.get("match")
-    if match_param:
-        matched_clean = match_param.lstrip("/")
-        new_path = f"/api/{matched_clean}" if matched_clean else "/api"
-        request.scope["path"] = new_path
-        request.scope["raw_path"] = new_path.encode("utf-8")
-    return await call_next(request)
+from urllib.parse import parse_qs, urlencode, unquote
+
+class VercelPathRewriteMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope.get("type") == "http":
+            qs_bytes = scope.get("query_string", b"")
+            qs_str = qs_bytes.decode("utf-8", errors="ignore")
+            if "match=" in qs_str:
+                params = parse_qs(qs_str, keep_blank_values=True)
+                matched = params.pop("match", [None])[0]
+                if matched:
+                    matched_clean = unquote(matched).lstrip("/")
+                    new_path = f"/api/{matched_clean}" if matched_clean else "/api"
+                    scope["path"] = new_path
+                    scope["raw_path"] = new_path.encode("utf-8")
+                    remaining_qs = urlencode([(k, v) for k, vs in params.items() for v in vs])
+                    scope["query_string"] = remaining_qs.encode("utf-8")
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelPathRewriteMiddleware)
 
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exc: Exception):
