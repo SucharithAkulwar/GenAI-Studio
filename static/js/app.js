@@ -500,10 +500,6 @@
           <div class="hero-orb-wrapper">
             <div class="orb-backdrop-glow"></div>
             <canvas id="reactive-orb-canvas" class="reactive-orb-canvas" width="560" height="560"></canvas>
-            <div class="orb-interaction-hint">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-              <span>Hover & drag to manipulate 3D orb</span>
-            </div>
           </div>
         </div>
       </div>
