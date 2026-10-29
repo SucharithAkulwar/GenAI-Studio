@@ -272,7 +272,7 @@
     currentRoute: 'home',
     systemStatus: null,
     experiments: DEFAULT_EXPERIMENTS,
-    expCache: {},
+    expCache: Object.assign({}, FALLBACK_EXP_METADATA),
     activeTab: 'gen'
   };
 
@@ -525,10 +525,22 @@
     `;
 
     try {
-      const expKey = `exp${String(expId).padStart(2, '0')}`;
-      const res = await fetch(`/api/${expKey}/info`);
-      if (!res.ok) throw new Error(`HTTP ${res.status} while fetching experiment metadata`);
-      const info = await res.json();
+      let info = state.expCache[expId] || (typeof FALLBACK_EXP_METADATA !== 'undefined' ? (FALLBACK_EXP_METADATA[expId] || FALLBACK_EXP_METADATA[String(expId)]) : null);
+      if (!info) {
+        try {
+          const expKey = `exp${String(expId).padStart(2, '0')}`;
+          const res = await fetch(`/api/${expKey}/info`);
+          if (res.ok) {
+            info = await res.json();
+            state.expCache[expId] = info;
+          }
+        } catch (e) {
+          console.warn('Network fetch skipped for experiment', expId, e);
+        }
+      }
+      if (!info) {
+        throw new Error(`Metadata for Experiment ${expId} is unavailable.`);
+      }
       state.expCache[expId] = info;
 
       const notebookUrl = info.notebook ? info.notebook.notebook_url : '#';

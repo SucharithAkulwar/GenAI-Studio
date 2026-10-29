@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from urllib.parse import parse_qs, urlencode
+from urllib.parse import parse_qs, urlencode, unquote
 
 # Add project root to sys.path so app module is importable
 root_dir = Path(__file__).resolve().parent.parent
@@ -17,8 +17,10 @@ async def app(scope, receive, send):
             params = parse_qs(qs_str, keep_blank_values=True)
             matched = params.pop("match", [None])[0]
             if matched:
-                matched_clean = matched.lstrip("/")
-                scope["path"] = f"/api/{matched_clean}" if matched_clean else "/api"
+                matched_clean = unquote(matched).lstrip("/")
+                new_path = f"/api/{matched_clean}" if matched_clean else "/api"
+                scope["path"] = new_path
+                scope["raw_path"] = new_path.encode("utf-8")
                 remaining_qs = urlencode([(k, v) for k, vs in params.items() for v in vs])
                 scope["query_string"] = remaining_qs.encode("utf-8")
 
