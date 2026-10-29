@@ -9,6 +9,252 @@
   const $ = (selector, context = document) => context.querySelector(selector);
   const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
 
+  const FALLBACK_EXP_METADATA = {
+  "1": {
+    "id": 1,
+    "title": "Comprehensive Dataset Analysis and Preprocessing for Generative AI using Python Libraries",
+    "aim": "Understand, explore, preprocess and analyze any dataset like a data scientist using NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, TensorFlow, Keras, PyTorch and LangChain, and prepare high-quality datasets for Generative AI and ML.",
+    "tags": [
+      "NumPy",
+      "Pandas",
+      "Matplotlib",
+      "Seaborn",
+      "Scikit-learn",
+      "Data Preprocessing"
+    ],
+    "pipeline": [
+      "1. Ingestion: Load raw tabular dataset (CSV) into Pandas DataFrame",
+      "2. Structural Profiling: Inspect dimensions, data types, and head snapshot",
+      "3. Statistical Summary: Calculate central tendency, dispersion, quartiles, and IQR outliers",
+      "4. Quality Audit: Identify missing values, duplicate records, and high-correlation features",
+      "5. Preprocessing & Transformation: Imputation, categorical encoding, scaling, and train/test partition",
+      "6. Export: Download AI-ready dataset artifact for GenAI/ML downstream training"
+    ],
+    "code_snippet": "import pandas as pd\nimport numpy as np\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\nfrom sklearn.model_selection import train_test_split\n\n# 1. Load and inspect\ndf = pd.read_csv('dataset.csv')\nprint(df.info(), df.describe())\n\n# 2. IQR Outlier Detection\nQ1 = df['val'].quantile(0.25)\nQ3 = df['val'].quantile(0.75)\nIQR = Q3 - Q1\noutliers = df[(df['val'] < Q1 - 1.5 * IQR) | (df['val'] > Q3 + 1.5 * IQR)]\n\n# 3. Imputation and Scaling\ndf.fillna(df.median(numeric_only=True), inplace=True)\nscaler = StandardScaler()\ndf[numeric_cols] = scaler.fit_transform(df[numeric_cols])\n\n# 4. Partition\ntrain_df, test_df = train_test_split(df, test_size=0.2, random_state=42)",
+    "notebook": {
+      "filename": "GenAI_Experiment_01.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_01.ipynb"
+    }
+  },
+  "2": {
+    "id": 2,
+    "title": "Basic Python Operations and TensorFlow 2 Tensor Operations for Generative AI Applications",
+    "aim": "Understand and implement basic Python operations and TensorFlow 2 tensor operations to build a foundation for generative AI.",
+    "tags": [
+      "TensorFlow 2",
+      "Tensors",
+      "Matrix Operations",
+      "GradientTape",
+      "Autograd"
+    ],
+    "pipeline": [
+      "1. Operation Selection: Pick from whitelist of tensor primitives (constant, zeros, random, reshape, etc.)",
+      "2. Parameter Validation: Sanitize dimensions, shapes, and input data without code execution",
+      "3. Computation Graph: Execute operation through TensorFlow 2 eager execution runtime",
+      "4. Autograd Tracking: Use tf.GradientTape to record automatic differentiation and derivatives",
+      "5. Inspection & Telemetry: Return shapes, rank, dtype, and visual step breakdown"
+    ],
+    "code_snippet": "import tensorflow as tf\n\n# 1. Tensors and Shapes\nt = tf.random.normal([2, 3], mean=0.0, stddev=1.0)\nprint(t.shape, t.dtype)\n\n# 2. Matrix Multiplication\nA = tf.constant([[1.0, 2.0], [3.0, 4.0]])\nB = tf.constant([[5.0, 6.0], [7.0, 8.0]])\nC = tf.matmul(A, B)\n\n# 3. Automatic Differentiation with GradientTape\nx = tf.Variable(3.0)\nwith tf.GradientTape() as tape:\n    y = x**2 + 3.0*x + 5.0\ndy_dx = tape.gradient(y, x) # Result: 2*(3) + 3 = 9.0",
+    "notebook": {
+      "filename": "GenAI_Experiment_02.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_02.ipynb"
+    }
+  },
+  "3": {
+    "id": 3,
+    "title": "Text Generation using a Pre-trained Transformer Model for a Question\u2013Answer System",
+    "aim": "Implement a text-generation Question\u2013Answer system using a pre-trained Transformer and generate answers to user questions.",
+    "tags": [
+      "Transformers",
+      "FLAN-T5",
+      "Seq2Seq",
+      "Prompt Engineering",
+      "NLP"
+    ],
+    "pipeline": [
+      "1. Input Structuring: Format user question and optional background context into prompt template",
+      "2. Tokenization: Convert text into subword token IDs using T5Tokenizer",
+      "3. Transformer Forward Pass: Pass encoder-decoder representations through self-attention layers",
+      "4. Decoding: Autoregressively sample tokens with temperature and top-p nucleus thresholds",
+      "5. Output Formatting: Detokenize and present final generated answer with prompt breakdown"
+    ],
+    "code_snippet": "from transformers import AutoTokenizer, AutoModelForSeq2SeqLM\n\n# 1. Load model lazily\nmodel_name = \"google/flan-t5-base\"\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForSeq2SeqLM.from_pretrained(model_name)\n\n# 2. Formulate Prompt\nprompt = \"Context: Generative AI produces synthetic artifacts.\nQuestion: What does GenAI do?\nAnswer:\"\ninputs = tokenizer(prompt, return_tensors=\"pt\")\n\n# 3. Generate Answer\noutputs = model.generate(**inputs, max_new_tokens=100, temperature=0.7, top_p=0.9)\nprint(tokenizer.decode(outputs[0], skip_special_tokens=True))",
+    "notebook": {
+      "filename": "GenAI_Experiment_03.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_03.ipynb"
+    }
+  },
+  "4": {
+    "id": 4,
+    "title": "Text-to-Image Generation using a Pre-trained Diffusion Model",
+    "aim": "Generate images from natural-language prompts using a pre-trained diffusion model.",
+    "tags": [
+      "Diffusers",
+      "Stable Diffusion",
+      "SD-Turbo",
+      "Latent Diffusion",
+      "Text-to-Image"
+    ],
+    "pipeline": [
+      "1. Conditioning: Text prompt encoded via CLIP/OpenCLIP text encoder into continuous embeddings",
+      "2. Latent Initialization: Random Gaussian noise latents sampled from prior distribution",
+      "3. Iterative Denoising: UNet predicts noise residual across timesteps guided by classifier-free guidance",
+      "4. Autoencoder Decoding: VAE decoder maps denoised latent representation back to pixel space",
+      "5. Delivery: Save generated image artifact with instant download link"
+    ],
+    "code_snippet": "from diffusers import AutoPipelineForText2Image\nimport torch\n\n# 1. Pipeline initialization\npipe = AutoPipelineForText2Image.from_pretrained(\n    \"stabilityai/sd-turbo\",\n    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32\n)\nif torch.cuda.is_available():\n    pipe.to(\"cuda\")\n\n# 2. Generation with CFG & Seed\nprompt = \"A high-tech laboratory with glowing neural holographic displays\"\nimage = pipe(prompt=prompt, num_inference_steps=20, guidance_scale=7.5).images[0]\nimage.save(\"output.png\")",
+    "notebook": {
+      "filename": "GenAI_Experiment_04.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_04.ipynb"
+    }
+  },
+  "5": {
+    "id": 5,
+    "title": "Variational Autoencoder (VAE) on MNIST for New Image Generation",
+    "aim": "Implement a VAE with TensorFlow/Keras, train it on MNIST, and generate new MNIST-like images using the learned latent space and trained decoder.",
+    "tags": [
+      "TensorFlow",
+      "Keras",
+      "VAE",
+      "Latent Space",
+      "Reparameterization Trick"
+    ],
+    "pipeline": [
+      "1. Probabilistic Encoder: Maps 28x28 digit into mean (z_mean) and log-variance (z_log_var)",
+      "2. Reparameterization Trick: Samples latent vectors z = z_mean + exp(0.5 * z_log_var) * eps",
+      "3. Loss Formulation: Reconstruction loss (Binary Cross-Entropy) + KL Divergence regularizer",
+      "4. Decoder Synthesis: Maps 2D latent points back to reconstructed 28x28 digit images",
+      "5. Interactive Latent Exploration: Decodes custom coordinates (z1, z2) live"
+    ],
+    "code_snippet": "import tensorflow as tf\nfrom tensorflow.keras import layers, Model\n\n# 1. Reparameterization sampling\ndef sample_z(args):\n    z_mean, z_log_var = args\n    eps = tf.random.normal(shape=tf.shape(z_mean))\n    return z_mean + tf.exp(0.5 * z_log_var) * eps\n\n# 2. VAE Loss = Reconstruction + KL Divergence\nkl_loss = -0.5 * tf.reduce_mean(1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))\nvae.add_loss(kl_loss)",
+    "notebook": {
+      "filename": "GenAI_Experiment_05.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_05.ipynb"
+    }
+  },
+  "6": {
+    "id": 6,
+    "title": "Implementation of GANs (DCGAN) on CelebA Dataset",
+    "aim": "Implement a Deep Convolutional GAN on the CelebA dataset.",
+    "tags": [
+      "DCGAN",
+      "CelebA",
+      "Adversarial Training",
+      "Conv2DTranspose",
+      "BatchNormalization"
+    ],
+    "pipeline": [
+      "1. Prior Sampling: Sample latent vector z from standard Gaussian N(0, I)",
+      "2. Generator Synthesis: Project and upsample latent code through transposed convolutions & BatchNorm",
+      "3. Discriminator Evaluation: Strided convolutions classify synthetic vs real CelebA faces",
+      "4. Minimax Adversarial Optimization: Binary cross entropy loss updates G and D alternately",
+      "5. Progression Tracking: Review epoch-by-epoch loss convergence and synthesized face grids"
+    ],
+    "code_snippet": "from tensorflow.keras import layers, models\n\n# 1. Generator Model\ndef make_generator_model():\n    model = models.Sequential([\n        layers.Dense(8*8*256, use_bias=False, input_shape=(100,)),\n        layers.BatchNormalization(),\n        layers.LeakyReLU(0.2),\n        layers.Reshape((8, 8, 256)),\n        layers.Conv2DTranspose(128, 5, strides=2, padding='same', use_bias=False),\n        layers.BatchNormalization(),\n        layers.LeakyReLU(0.2),\n        layers.Conv2DTranspose(64, 5, strides=2, padding='same', use_bias=False),\n        layers.BatchNormalization(),\n        layers.LeakyReLU(0.2),\n        layers.Conv2DTranspose(3, 5, strides=2, padding='same', activation='tanh')\n    ])\n    return model",
+    "notebook": {
+      "filename": "GenAI_Experiment_06.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_06.ipynb"
+    }
+  },
+  "7": {
+    "id": 7,
+    "title": "Implementation of StyleGANs for Generating High-Quality Images",
+    "aim": "Implement a Style-based GAN for generating high-quality and diverse human face images using CelebA, and demonstrate explicit control over generation through a learned intermediate latent space: coarse-to-fine style control, style mixing between two identities, and stochastic detail variation using noise injection.",
+    "tags": [
+      "StyleGAN",
+      "AdaIN",
+      "Latent Space W",
+      "Style Mixing",
+      "Noise Injection"
+    ],
+    "pipeline": [
+      "1. Mapping Network: 8-layer MLP maps latent z in Z to disentangled intermediate latent w in W",
+      "2. Synthesis Network: Progressive resolution generator starting from learned constant 4x4 tensor",
+      "3. Adaptive Instance Normalization (AdaIN): Modulates feature channels using scale and bias from w",
+      "4. Style Mixing: Injects latent w1 at coarse layers and w2 at fine layers to combine identities",
+      "5. Stochastic Noise Injection: Adds per-pixel Gaussian noise to control fine stochastic details (freckles, curls)"
+    ],
+    "code_snippet": "# AdaIN Formulation\ndef AdaIN(x, y):\n    mean_x = tf.reduce_mean(x, axis=[1, 2], keepdims=True)\n    std_x = tf.math.reduce_std(x, axis=[1, 2], keepdims=True)\n    norm = (x - mean_x) / (std_x + 1e-8)\n    # y provides scale (ys) and bias (yb) learned from latent w\n    return ys * norm + yb",
+    "notebook": {
+      "filename": "GenAI_Experiment_07.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_07.ipynb"
+    }
+  },
+  "8": {
+    "id": 8,
+    "title": "Generation of Novel Music Compositions using a Pretrained Open-Source Foundation Model (MusicGen)",
+    "aim": "Use a pretrained, open-source Transformer-based foundation model (MusicGen) to generate novel music directly from text prompts, without dataset collection or training, and save and play the generated audio.",
+    "tags": [
+      "MusicGen",
+      "AudioCraft",
+      "Residual Vector Quantization",
+      "Audio Transformer",
+      "Text-to-Audio"
+    ],
+    "pipeline": [
+      "1. Conditioning: Text description encoded into conditioning tokens via T5 text encoder",
+      "2. Autoregressive Codebook Modeling: Transformer predicts discrete acoustic codebook indices",
+      "3. Residual Vector Quantization (RVQ): Multi-stage codebook quantizes continuous spectrogram bands",
+      "4. Neural Audio Decoder: EnCodec neural vocoder synthesizes high-fidelity 32kHz waveform from codes",
+      "5. Playback & Export: Render in HTML audio player, visualize waveform, and offer direct WAV download"
+    ],
+    "code_snippet": "from transformers import AutoProcessor, MusicgenForConditionalGeneration\nimport scipy.io.wavfile\n\n# 1. Load MusicGen Small\nprocessor = AutoProcessor.from_pretrained(\"facebook/musicgen-small\")\nmodel = MusicgenForConditionalGeneration.from_pretrained(\"facebook/musicgen-small\")\n\n# 2. Text to music generation\ninputs = processor(text=[\"lo-fi chill beats with warm Rhodes piano\"], return_tensors=\"pt\")\naudio_values = model.generate(**inputs, max_new_tokens=256)\n\n# 3. Export WAV\nscipy.io.wavfile.write(\"music.wav\", rate=32000, data=audio_values[0, 0].numpy())",
+    "notebook": {
+      "filename": "GenAI_Experiment_08.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_08.ipynb"
+    }
+  },
+  "9": {
+    "id": 9,
+    "title": "Development of a Personalized AI Assistant using an Open-Source LLM, Retrieval-Augmented Generation (RAG) and Fine-Tuning",
+    "aim": "Develop a personalized AI assistant using an open-source foundational language model, integrate a RAG system to answer questions from user-specific documents, and investigate the effect of parameter-efficient fine-tuning using LoRA or QLoRA on response quality.",
+    "tags": [
+      "RAG",
+      "FAISS",
+      "Sentence-Transformers",
+      "PEFT",
+      "LoRA",
+      "Open-Source LLM"
+    ],
+    "pipeline": [
+      "1. Document Ingestion: Extract text chunks from uploaded PDF and TXT domain files",
+      "2. Embedding & Indexing: Compute dense vector embeddings and index in FAISS vector store",
+      "3. Semantic Retrieval: Retrieve top-k most relevant chunks using cosine similarity metric",
+      "4. Prompt Augmentation: Ground LLM generation with retrieved contextual excerpts and citations",
+      "5. Comparative Evaluation: Side-by-side output comparison between Base Model and LoRA-fine-tuned weights"
+    ],
+    "code_snippet": "from peft import LoraConfig, get_peft_model\nfrom transformers import AutoModelForCausalLM\n\n# 1. LoRA Configuration\nconfig = LoraConfig(\n    r=8,\n    lora_alpha=32,\n    target_modules=[\"q_proj\", \"v_proj\"],\n    lora_dropout=0.05,\n    bias=\"none\",\n    task_type=\"CAUSAL_LM\"\n)\n\n# 2. Wrap Base Model\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2.5-0.5B-Instruct\")\npeft_model = get_peft_model(model, config)\npeft_model.print_trainable_parameters() # Trainable params: ~0.1%",
+    "notebook": {
+      "filename": "GenAI_Experiment_09.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_09.ipynb"
+    }
+  },
+  "10": {
+    "id": 10,
+    "title": "Generation of Videos from Text Prompts using a Pretrained Open-Source Video Generation Foundation Model",
+    "aim": "Use a pretrained, open-source video generation foundation model to generate short videos directly from text prompts, without collecting a dataset or training the model, and preview and save the generated videos.",
+    "tags": [
+      "Diffusers",
+      "Text-to-Video",
+      "damo-vilab",
+      "Spatiotemporal Attention",
+      "Video Diffusion"
+    ],
+    "pipeline": [
+      "1. Text Conditioning: Encodes textual prompt via CLIP text encoder into contextual semantic features",
+      "2. Spatiotemporal Latent Prior: Samples 3D latent noise tensor (Batch, Channels, Frames, Height, Width)",
+      "3. Cross-Frame Attention: UNet alternates spatial 2D attention and temporal 1D self-attention across frames",
+      "4. Temporal Denoising: Progressive DDIM denoising step-by-step preserves temporal visual coherence",
+      "5. Video Rendering: VAE temporal decoder synthesizes coherent MP4 video playable in browser"
+    ],
+    "code_snippet": "import torch\nfrom diffusers import DiffusionPipeline\n\n# 1. Load Text-to-Video Model\npipe = DiffusionPipeline.from_pretrained(\n    \"damo-vilab/text-to-video-ms-1.7b\",\n    torch_dtype=torch.float16,\n    variant=\"fp16\"\n)\npipe.enable_model_cpu_offload()\n\n# 2. Generate video frames\nprompt = \"An astronaut walking peacefully on the surface of Mars with crimson dust\"\nvideo_frames = pipe(prompt, num_frames=16, num_inference_steps=25).frames[0]\n\n# 3. Export MP4\nfrom diffusers.utils import export_to_video\nexport_to_video(video_frames, \"mars_walk.mp4\")",
+    "notebook": {
+      "filename": "GenAI_Experiment_10.ipynb",
+      "notebook_url": "https://github.com/SucharithAkulwar/GenAI-Studio/tree/main/notebooks/GenAI_Experiment_10.ipynb"
+    }
+  }
+};
+
   const DEFAULT_EXPERIMENTS = [
     { id: 1, title: 'Data Foundations & Feature Prep', category: 'Data Foundations', tags: ['Pandas', 'EDA', 'Feature Eng'] },
     { id: 2, title: 'Tensor Computing & Operations', category: 'Tensor Computing', tags: ['PyTorch', 'Linear Algebra', 'Shapes'] },
