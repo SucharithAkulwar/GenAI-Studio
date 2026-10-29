@@ -188,12 +188,6 @@
   function renderHome(container) {
     container.innerHTML = `
       <div class="hero-section">
-        <a href="#experiments-section" class="hero-badge-pill" id="hero-badge-pill">
-          <span class="pill-tag">NEW</span>
-          <span>10 Lab Experiments Live • Ready to run</span>
-          <span>→</span>
-        </a>
-
         <div style="position: relative; display: inline-block;">
           <h1 class="hero-display-title">
             Less boilerplate.
@@ -218,12 +212,6 @@
               <line x1="7" y1="17" x2="17" y2="7"></line>
               <polyline points="7 7 17 7 17 17"></polyline>
             </svg>
-          </a>
-          <a href="#exp-2" class="btn-hero-outline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <span>Tensor Playground</span>
           </a>
         </div>
       </div>
@@ -260,10 +248,6 @@
     const exploreBtn = document.getElementById('btn-explore-experiments');
     if (exploreBtn) {
       exploreBtn.addEventListener('click', scrollToExperiments);
-    }
-    const badgePill = document.getElementById('hero-badge-pill');
-    if (badgePill) {
-      badgePill.addEventListener('click', scrollToExperiments);
     }
   }
 
