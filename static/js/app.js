@@ -294,7 +294,7 @@
   };
 
   function initTheme() {
-    const saved = localStorage.getItem('genai_theme') || 'theme-light';
+    const saved = localStorage.getItem('genai_theme') || 'theme-dark';
     document.body.className = saved;
     updateThemeIcon(saved);
 
@@ -444,6 +444,10 @@
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
     } else if (hash.startsWith('exp-')) {
+      if (window._currentOrbInstance) {
+        try { window._currentOrbInstance.destroy(); } catch (e) {}
+        window._currentOrbInstance = null;
+      }
       window.scrollTo({ top: 0, behavior: 'instant' });
       const expId = parseInt(hash.replace('exp-', ''), 10);
       renderExperiment(container, expId);
@@ -451,27 +455,61 @@
   }
 
   function renderHome(container) {
+    if (window._currentOrbInstance) {
+      try { window._currentOrbInstance.destroy(); } catch (e) {}
+      window._currentOrbInstance = null;
+    }
+
     container.innerHTML = `
-      <div class="hero-section">
-        <h1 class="hero-display-title">
-          Less boilerplate.
-          <span class="accent-line">More GenAI.</span>
-        </h1>
+      <div class="hero-two-col">
+        <div class="hero-text-col">
+          <div class="hero-tag-badge">
+            <span class="badge-pulsing-dot"></span>
+            <span>NEXT-GEN AI PLAYGROUND</span>
+          </div>
 
-        <p class="hero-lead-text">
-          Models, pipelines, and interactive demos — all in one studio.<br>
-          The intuitive laboratory workbench to understand and execute generative AI.
-        </p>
+          <h1 class="hero-display-title">
+            <span class="hero-title-line">Effortless</span>
+            <span class="hero-title-line">AI integration</span>
+            <span class="hero-title-line hero-title-gradient">for engineering</span>
+          </h1>
 
-        <div class="hero-cta-group">
-          <a href="#experiments-section" id="btn-explore-experiments" class="btn-hero-solid">
-            <span>Explore Experiments</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
-          </a>
+          <p class="hero-lead-text">
+            Run, inspect, and benchmark 10 production-grade Generative AI pipelines — from Transformer NLP and diffusion synthesis to MusicGen audio, RAG vector retrieval, and video generation.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#experiments-section" id="btn-explore-experiments" class="btn-hero-glow">
+              <span>EXPLORE EXPERIMENTS</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 13 12 18 17 13"></polyline><line x1="12" y1="6" x2="12" y2="18"></line></svg>
+            </a>
+            <a href="https://github.com/SucharithAkulwar/GenAI-Studio" target="_blank" rel="noopener noreferrer" class="btn-hero-outline">
+              <span>GITHUB REPO</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </a>
+          </div>
+
+          <div class="hero-feature-pills">
+            <span class="feature-pill"><span class="pill-dot"></span> 10 Live Architectures</span>
+            <span class="feature-pill"><span class="pill-dot green"></span> Zero Setup Required</span>
+            <span class="feature-pill"><span class="pill-dot cyan"></span> Reactive 3D Physics</span>
+          </div>
         </div>
+
+        <div class="hero-orb-col">
+          <div class="hero-orb-wrapper">
+            <div class="orb-backdrop-glow"></div>
+            <canvas id="reactive-orb-canvas" class="reactive-orb-canvas" width="560" height="560"></canvas>
+            <div class="orb-interaction-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              <span>Hover & drag to manipulate 3D orb</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-bottom-wave-container">
+        <div class="hero-bottom-wave"></div>
       </div>
 
       <div id="experiments-section" class="section-divider-title">Select an experiment to launch</div>
@@ -493,6 +531,12 @@
         `).join('')}
       </div>
     `;
+
+    // Initialize Reactive 3D Orb Canvas
+    const orbCanvas = document.getElementById('reactive-orb-canvas');
+    if (orbCanvas && window.ReactiveOrb) {
+      window._currentOrbInstance = window.ReactiveOrb.init(orbCanvas);
+    }
 
     const scrollToExperiments = (e) => {
       e.preventDefault();
